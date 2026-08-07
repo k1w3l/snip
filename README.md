@@ -44,7 +44,7 @@ curl -fsSL https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/
 curl -fsSL https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/extras.sh | sudo bash -s -- ufw --enable-ufw
 ```
 
-Ids: `curl`, `git`, `editors`, `shell`, `archive`, `htop`, `tmux`, `jq`, `tree`, `ncdu`, `debug`, `net`, `ssh`, `chrony`, `ufw`, `apt-tools`, `modern`, `dev`.
+Ids: `curl`, `git`, `editors`, `shell` (bash helpers + fish + fastfetch), `archive`, `htop`, `tmux`, `jq`, `tree`, `ncdu`, `debug`, `net`, `ssh`, `chrony`, `ufw`, `apt-tools`, `modern`, `dev`.
 
 ## Docker Engine
 

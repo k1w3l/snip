@@ -28,7 +28,7 @@ CATALOG=(
   "curl|HTTP client e CA|curl wget ca-certificates"
   "git|Controle de versão|git"
   "editors|Editores extras|nano neovim"
-  "shell|Shell helpers|bash-completion less man-db"
+  "shell|Shell helpers (bash, fish, fastfetch)|bash-completion less man-db fish fastfetch"
   "archive|Arquivos|unzip zip tar rsync"
   "htop|Monitor de processos|htop"
   "tmux|Multiplexador de terminal|tmux"
