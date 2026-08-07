@@ -193,6 +193,9 @@ post_install_hooks() {
           ln -sf "$(command -v fdfind)" /usr/local/bin/fd
         fi
         ;;
+      shell)
+        configure_fish_shell
+        ;;
       ufw)
         if [[ "$ENABLE_UFW" -eq 1 ]]; then
           echo "==> UFW: allow OpenSSH + enable"
@@ -206,6 +209,123 @@ post_install_hooks() {
         ;;
     esac
   done
+}
+
+selection_has() {
+  local want="$1" idx
+  for idx in "${SELECTED_IDX[@]}"; do
+    if [[ "$(catalog_id "$idx")" == "$want" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+target_login_user() {
+  if [[ -n "${SUDO_USER:-}" && "${SUDO_USER}" != "root" ]]; then
+    echo "$SUDO_USER"
+  elif [[ "$(id -u)" -eq 0 ]]; then
+    # root direto: não força fish em root a menos que seja a sessão atual
+    echo "root"
+  else
+    id -un
+  fi
+}
+
+ensure_fastfetch() {
+  if command -v fastfetch >/dev/null 2>&1; then
+    echo "==> fastfetch já instalado: $(command -v fastfetch)"
+    return 0
+  fi
+
+  echo "==> Resolvendo fastfetch"
+  apt-get update -y
+  if apt-cache show fastfetch >/dev/null 2>&1; then
+    apt-get install -y fastfetch && return 0
+  fi
+
+  echo "==> fastfetch não está nos repositórios padrão; adicionando PPA"
+  apt-get install -y software-properties-common ca-certificates gnupg
+  if add-apt-repository -y ppa:zhangsongcui3371/fastfetch; then
+    apt-get update -y
+    if apt-get install -y fastfetch; then
+      return 0
+    fi
+  fi
+
+  echo "==> PPA falhou; baixando .deb do GitHub releases"
+  local arch deb_arch url tmp
+  arch="$(dpkg --print-architecture)"
+  case "$arch" in
+    amd64) deb_arch=amd64 ;;
+    arm64) deb_arch=aarch64 ;;
+    *)
+      echo "erro: arquitetura sem .deb pronto do fastfetch: $arch" >&2
+      return 1
+      ;;
+  esac
+  url="https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-${deb_arch}.deb"
+  tmp="$(mktemp --suffix=.deb)"
+  curl -fsSL -o "$tmp" "$url"
+  apt-get install -y "$tmp"
+  rm -f "$tmp"
+  command -v fastfetch >/dev/null 2>&1
+}
+
+configure_fish_shell() {
+  local user home fish_path conf marker
+  user="$(target_login_user)"
+  home="$(getent passwd "$user" | cut -d: -f6)"
+  fish_path="$(command -v fish || true)"
+
+  if [[ -z "$fish_path" ]]; then
+    echo "aviso: fish não encontrado; pulando shell padrão" >&2
+    return 0
+  fi
+
+  if [[ -z "$home" || ! -d "$home" ]]; then
+    echo "aviso: home de $user não encontrado; pulando config fish" >&2
+    return 0
+  fi
+
+  if ! grep -qxF "$fish_path" /etc/shells 2>/dev/null; then
+    echo "$fish_path" >> /etc/shells
+  fi
+
+  echo "==> Definindo fish como shell padrão de ${user}"
+  chsh -s "$fish_path" "$user"
+
+  mkdir -p "$home/.config/fish"
+  conf="$home/.config/fish/config.fish"
+  marker="# docker-ubuntu-install: fastfetch on interactive shell"
+  touch "$conf"
+  if ! grep -qF "$marker" "$conf" 2>/dev/null; then
+    echo "==> Adicionando fastfetch ao config.fish de ${user}"
+    cat >>"$conf" <<EOF
+
+$marker
+if status is-interactive
+    and command -q fastfetch
+    fastfetch
+end
+EOF
+  else
+    echo "==> config.fish já carrega fastfetch"
+  fi
+  chown -R "$user":"$user" "$home/.config/fish"
+}
+
+launch_fish_if_requested() {
+  selection_has shell || return 0
+  command -v fish >/dev/null 2>&1 || return 0
+
+  local user
+  user="$(target_login_user)"
+  echo "==> Abrindo fish"
+  if [[ "$user" != "root" && "$(id -u)" -eq 0 ]]; then
+    exec sudo -u "$user" -H fish -l
+  fi
+  exec fish -l
 }
 
 if [[ "$DO_LIST" -eq 1 ]]; then
@@ -235,20 +355,40 @@ for idx in "${SELECTED_IDX[@]}"; do
   PKGS+=($(catalog_pkgs "$idx"))
 done
 
-mapfile -t PKGS < <(printf '%s\n' "${PKGS[@]}" | sort -u)
+# fastfetch: tratar à parte (repo/PPA/.deb) — remove do lote apt
+INSTALL_FASTFETCH=0
+FILTERED=()
+for pkg in "${PKGS[@]}"; do
+  if [[ "$pkg" == "fastfetch" ]]; then
+    INSTALL_FASTFETCH=1
+  else
+    FILTERED+=("$pkg")
+  fi
+done
+if [[ ${#FILTERED[@]} -gt 0 ]]; then
+  mapfile -t PKGS < <(printf '%s\n' "${FILTERED[@]}" | sort -u)
+else
+  PKGS=()
+fi
 
 echo "==> apt update"
 apt-get update -y
 
-echo "==> Instalando: ${PKGS[*]}"
-# pacotes que podem faltar em alguma release: tenta um a um se o lote falhar
-if ! apt-get install -y "${PKGS[@]}"; then
-  echo "aviso: install em lote falhou; tentando pacote a pacote" >&2
-  for pkg in "${PKGS[@]}"; do
-    apt-get install -y "$pkg" || echo "aviso: pulou $pkg" >&2
-  done
+if [[ ${#PKGS[@]} -gt 0 ]]; then
+  echo "==> Instalando: ${PKGS[*]}"
+  if ! apt-get install -y "${PKGS[@]}"; then
+    echo "aviso: install em lote falhou; tentando pacote a pacote" >&2
+    for pkg in "${PKGS[@]}"; do
+      apt-get install -y "$pkg" || echo "aviso: pulou $pkg" >&2
+    done
+  fi
+fi
+
+if [[ "$INSTALL_FASTFETCH" -eq 1 ]] || selection_has shell; then
+  ensure_fastfetch || echo "aviso: não foi possível instalar fastfetch" >&2
 fi
 
 post_install_hooks
 
 echo "==> Extras instalados."
+launch_fish_if_requested
