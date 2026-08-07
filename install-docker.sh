@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 # Instala Docker Engine + Compose no Ubuntu (repositório oficial).
-# Uso one-liner (rede local / Gitea):
-#   curl -fsSL http://192.168.1.34:3000/kiwel/docker-ubuntu-install/raw/branch/master/install-docker.sh | bash
-set -euo pipefail
+# Uso one-liner (rede local / Gitea) — sudo no bash, não no curl:
+#   curl -fsSL http://192.168.1.34:3000/kiwel/docker-ubuntu-install/raw/branch/master/install-docker.sh | sudo bash
 
+# curl|bash: $0 vira /usr/bin/bash (binário). Reexecuta o restante do stdin como root.
 if [[ "$(id -u)" -ne 0 ]]; then
-  exec sudo -E bash "$0" "$@"
+  src="${BASH_SOURCE[0]:-}"
+  if [[ -n "$src" && -f "$src" && "$src" == *.sh ]]; then
+    exec sudo -E bash "$src" "$@"
+  fi
+  exec sudo -E bash -s -- "$@"
 fi
 
+set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
 if [[ -f /etc/os-release ]]; then
