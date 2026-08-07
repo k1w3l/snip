@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Pacotes opcionais para Ubuntu — escolha o que instalar.
-# Uso one-liner (rede local / Gitea) — sudo no bash, não no curl:
-#   curl -fsSL http://192.168.1.34:3000/kiwel/docker-ubuntu-install/raw/branch/master/extras.sh | sudo bash
+# Uso one-liner — sudo no bash, não no curl:
+#   curl -fsSL https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/extras.sh | sudo bash
 #
 # Exemplos:
 #   bash extras.sh                  # menu interativo
