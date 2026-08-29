@@ -22,6 +22,7 @@ sudo curl -fsSL URL | bash
 | Bootstrap | https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/bootstrap.sh |
 | Extras | https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/extras.sh |
 | Docker | https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/install-docker.sh |
+| Compose update | https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/compose-update.sh |
 
 ## Bootstrap mínimo (update + upgrade + vim)
 
@@ -54,6 +55,29 @@ Se `fastfetch` não existir no apt: adiciona `ppa:zhangsongcui3371/fastfetch`; s
 curl -fsSL https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/install-docker.sh | sudo bash
 ```
 
+## Atualizar stack Compose
+
+`pull` → `up -d` (valida config, `--remove-orphans`, prune dangling). Não precisa de root se o usuário está no grupo `docker`.
+
+```fish
+bash compose-update.sh -d /path/to/stack
+
+# só um serviço
+bash compose-update.sh -d /path/to/stack web api
+
+# build local + up
+bash compose-update.sh -d /path/to/stack --build web
+
+# só pull
+bash compose-update.sh -d /path/to/stack --pull-only
+```
+
+One-liner (raw):
+
+```fish
+curl -fsSL https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/compose-update.sh | bash -s -- -d /path/to/stack
+```
+
 ## LAN (Gitea)
 
 ```fish
@@ -68,4 +92,5 @@ curl -fsSL http://192.168.1.34:3000/kiwel/docker-ubuntu-install/raw/branch/maste
 sudo bash bootstrap.sh
 sudo bash extras.sh
 sudo bash install-docker.sh
+bash compose-update.sh -d /path/to/stack
 ```
