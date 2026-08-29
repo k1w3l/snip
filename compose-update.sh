@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Atualiza stack Docker Compose: pull das imagens + recreate (up -d).
 # Uso one-liner — sudo no bash, não no curl:
-#   curl -fsSL https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/compose-update.sh | sudo bash -s -- -d /path/to/stack
+#   curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/compose-update.sh | sudo bash -s -- -d /path/to/stack
 #
 # Exemplos:
 #   compose-update.sh -d /opt/myapp

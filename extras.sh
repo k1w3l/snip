@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Pacotes opcionais para Ubuntu — escolha o que instalar.
 # Uso one-liner — sudo no bash, não no curl:
-#   curl -fsSL https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/extras.sh | sudo bash
+#   curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/extras.sh | sudo bash
 #
 # Exemplos:
 #   bash extras.sh                  # menu interativo
@@ -297,7 +297,7 @@ configure_fish_shell() {
 
   mkdir -p "$home/.config/fish"
   conf="$home/.config/fish/config.fish"
-  marker="# docker-ubuntu-install: fastfetch on interactive shell"
+  marker="# snip: fastfetch on interactive shell"
   touch "$conf"
   if ! grep -qF "$marker" "$conf" 2>/dev/null; then
     echo "==> Adicionando fastfetch ao config.fish de ${user}"

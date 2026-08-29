@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Bootstrap mínimo Ubuntu: update, upgrade e vim.
 # Uso one-liner — sudo no bash, não no curl:
-#   curl -fsSL https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/bootstrap.sh | sudo bash
+#   curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/bootstrap.sh | sudo bash
 
 # curl|bash: $0 vira /usr/bin/bash (binário). Reexecuta o restante do stdin como root.
 if [[ "$(id -u)" -ne 0 ]]; then
@@ -32,5 +32,5 @@ apt-get install -y vim
 
 echo
 echo "==> Bootstrap concluído (update + upgrade + vim)."
-echo "    Extras: curl -fsSL https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/extras.sh | sudo bash"
-echo "    Docker: curl -fsSL https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/install-docker.sh | sudo bash"
+echo "    Extras: curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/extras.sh | sudo bash"
+echo "    Docker: curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-docker.sh | sudo bash"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Instala Docker Engine + Compose no Ubuntu (repositório oficial).
 # Uso one-liner — sudo no bash, não no curl:
-#   curl -fsSL https://raw.githubusercontent.com/k1w3l/docker-ubuntu-install/master/install-docker.sh | sudo bash
+#   curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-docker.sh | sudo bash
 
 # curl|bash: $0 vira /usr/bin/bash (binário). Reexecuta o restante do stdin como root.
 if [[ "$(id -u)" -ne 0 ]]; then
