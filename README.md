@@ -24,7 +24,7 @@ sudo curl -fsSL URL | bash
 | Docker | https://raw.githubusercontent.com/k1w3l/snip/master/install-docker.sh |
 | Compose update | https://raw.githubusercontent.com/k1w3l/snip/master/compose-update.sh |
 
-## Bootstrap mínimo (update + upgrade + vim)
+## Bootstrap mínimo (update + upgrade + vim + curl)
 
 ```fish
 curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/bootstrap.sh | sudo bash
