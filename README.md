@@ -1,9 +1,8 @@
-# snip
+# Snip
 
-Scripts one-liner para Ubuntu novo (e btop em RHEL-like).
+Scripts one-liner para Ubuntu e RHEL.
 
 **Repo:** https://github.com/k1w3l/snip (público)  
-**Gitea (LAN):** http://192.168.1.34:3000/kiwel/snip
 
 **Importante:** o `sudo` vai no **bash**, não no `curl`:
 
@@ -23,7 +22,7 @@ sudo curl -fsSL URL | bash
 | Extras | https://raw.githubusercontent.com/k1w3l/snip/master/extras.sh |
 | Docker | https://raw.githubusercontent.com/k1w3l/snip/master/install-docker.sh |
 | Compose update | https://raw.githubusercontent.com/k1w3l/snip/master/compose-update.sh |
-| btop (RHEL) | https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh |
+| htop / btop (RHEL) | https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh |
 
 ## Bootstrap mínimo (update + upgrade + vim + curl)
 
@@ -56,12 +55,15 @@ Se `fastfetch` não existir no apt: adiciona `ppa:zhangsongcui3371/fastfetch`; s
 curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-docker.sh | sudo bash
 ```
 
-## btop (RHEL / Rocky / Alma / CentOS Stream / Oracle)
+## htop / btop (RHEL / Rocky / Alma / CentOS Stream / Oracle)
 
-Habilita CRB/PowerTools/CodeReady quando preciso, instala EPEL e `btop`. Em Fedora usa o repo base.
+Habilita CRB/PowerTools/CodeReady quando preciso, instala EPEL e o monitor escolhido (`htop`, `btop` ou ambos). Em Fedora usa o repo base. Sem args: menu interativo (precisa de TTY).
 
 ```fish
 curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh | sudo bash -s -- btop
+curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh | sudo bash -s -- htop
+curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh | sudo bash -s -- --both
 ```
 
 ## Atualizar stack Compose
