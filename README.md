@@ -1,6 +1,6 @@
 # snip
 
-Scripts one-liner para Ubuntu novo.
+Scripts one-liner para Ubuntu novo (e btop em RHEL-like).
 
 **Repo:** https://github.com/k1w3l/snip (público)  
 **Gitea (LAN):** http://192.168.1.34:3000/kiwel/snip
@@ -23,6 +23,7 @@ sudo curl -fsSL URL | bash
 | Extras | https://raw.githubusercontent.com/k1w3l/snip/master/extras.sh |
 | Docker | https://raw.githubusercontent.com/k1w3l/snip/master/install-docker.sh |
 | Compose update | https://raw.githubusercontent.com/k1w3l/snip/master/compose-update.sh |
+| btop (RHEL) | https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh |
 
 ## Bootstrap mínimo (update + upgrade + vim + curl)
 
@@ -55,6 +56,14 @@ Se `fastfetch` não existir no apt: adiciona `ppa:zhangsongcui3371/fastfetch`; s
 curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-docker.sh | sudo bash
 ```
 
+## btop (RHEL / Rocky / Alma / CentOS Stream / Oracle)
+
+Habilita CRB/PowerTools/CodeReady quando preciso, instala EPEL e `btop`. Em Fedora usa o repo base.
+
+```fish
+curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh | sudo bash
+```
+
 ## Atualizar stack Compose
 
 `pull` → `up -d` (valida config, `--remove-orphans`, prune dangling). Não precisa de root se o usuário está no grupo `docker`.
@@ -84,6 +93,7 @@ curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/compose-update.sh
 curl -fsSL http://192.168.1.34:3000/kiwel/snip/raw/branch/master/bootstrap.sh | sudo bash
 curl -fsSL http://192.168.1.34:3000/kiwel/snip/raw/branch/master/extras.sh | sudo bash
 curl -fsSL http://192.168.1.34:3000/kiwel/snip/raw/branch/master/install-docker.sh | sudo bash
+curl -fsSL http://192.168.1.34:3000/kiwel/snip/raw/branch/master/install-btop-rhel.sh | sudo bash
 ```
 
 ## Local
@@ -92,5 +102,6 @@ curl -fsSL http://192.168.1.34:3000/kiwel/snip/raw/branch/master/install-docker.
 sudo bash bootstrap.sh
 sudo bash extras.sh
 sudo bash install-docker.sh
+sudo bash install-btop-rhel.sh
 bash compose-update.sh -d /path/to/stack
 ```
