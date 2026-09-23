@@ -3,6 +3,7 @@
 Scripts one-liner para Ubuntu e RHEL.
 
 **Repo:** https://github.com/k1w3l/snip (público)  
+**Gitea (LAN):** http://192.168.1.34:3000/kiwel/snip
 
 **Importante:** o `sudo` vai no **bash**, não no `curl`:
 
@@ -22,7 +23,7 @@ sudo curl -fsSL URL | bash
 | Extras | https://raw.githubusercontent.com/k1w3l/snip/master/extras.sh |
 | Docker | https://raw.githubusercontent.com/k1w3l/snip/master/install-docker.sh |
 | Compose update | https://raw.githubusercontent.com/k1w3l/snip/master/compose-update.sh |
-| htop / btop (RHEL) | https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh |
+| RHEL extras (TUI) | https://raw.githubusercontent.com/k1w3l/snip/master/install-rhel-extras.sh |
 
 ## Bootstrap mínimo (update + upgrade + vim + curl)
 
@@ -55,16 +56,39 @@ Se `fastfetch` não existir no apt: adiciona `ppa:zhangsongcui3371/fastfetch`; s
 curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-docker.sh | sudo bash
 ```
 
-## htop / btop (RHEL / Rocky / Alma / CentOS Stream / Oracle)
+## RHEL extras — TUI / produtividade (`install-rhel-extras.sh`)
 
-Habilita CRB/PowerTools/CodeReady quando preciso, instala EPEL e o monitor escolhido (`htop`, `btop` ou ambos). Em Fedora usa o repo base. Sem args: menu interativo (precisa de TTY).
+Para RHEL, Rocky, AlmaLinux, CentOS Stream, Oracle Linux e Fedora. Habilita CRB/PowerTools/CodeReady + EPEL quando preciso; COPR só para `yazi` e `lazygit`. Sem args: menu interativo (precisa de TTY).
 
 ```fish
-curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh | sudo bash
-curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh | sudo bash -s -- btop
-curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh | sudo bash -s -- htop
-curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-btop-rhel.sh | sudo bash -s -- --both
+curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-rhel-extras.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-rhel-extras.sh | sudo bash -s -- --list
+curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-rhel-extras.sh | sudo bash -s -- btop yazi lazygit
+curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-rhel-extras.sh | sudo bash -s -- --all
 ```
+
+Ids: `htop`, `btop`, `yazi`, `ranger`, `mc`, `nnn`, `ncdu`, `fzf`, `lazygit`, `tig`, `micro`, `neovim`, `tmux`, `bat`, `ripgrep`, `jq`.
+
+| Id | Uso breve |
+|---|---|
+| htop | `htop` — setas, F9 mata, q sai |
+| btop | `btop` — Esc sai; 1–4 caixas |
+| yazi | `yazi` — hjkl, Enter abre, q sai (COPR) |
+| ranger | `ranger` — hjkl, q sai |
+| mc | `mc` — Tab painel, F10 sai |
+| nnn | `nnn` — setas, q sai |
+| ncdu | `ncdu /` — Enter entra, d apaga |
+| fzf | `fzf` / `vim "$(fzf)"` |
+| lazygit | `lazygit` — Space stage, c commit (COPR) |
+| tig | `tig` / `tig status` |
+| micro | `micro arquivo` — Ctrl-S / Ctrl-Q |
+| neovim | `nvim arquivo` — `:wq` |
+| tmux | `tmux` — Ctrl-b c / d |
+| bat | `bat arquivo` |
+| ripgrep | `rg padrão [path]` |
+| jq | `jq . file.json` |
+
+`install-btop-rhel.sh` redireciona para este script (compat).
 
 ## Atualizar stack Compose
 
@@ -95,7 +119,7 @@ curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/compose-update.sh
 curl -fsSL http://192.168.1.34:3000/kiwel/snip/raw/branch/master/bootstrap.sh | sudo bash
 curl -fsSL http://192.168.1.34:3000/kiwel/snip/raw/branch/master/extras.sh | sudo bash
 curl -fsSL http://192.168.1.34:3000/kiwel/snip/raw/branch/master/install-docker.sh | sudo bash
-curl -fsSL http://192.168.1.34:3000/kiwel/snip/raw/branch/master/install-btop-rhel.sh | sudo bash
+curl -fsSL http://192.168.1.34:3000/kiwel/snip/raw/branch/master/install-rhel-extras.sh | sudo bash
 ```
 
 ## Local
@@ -104,6 +128,6 @@ curl -fsSL http://192.168.1.34:3000/kiwel/snip/raw/branch/master/install-btop-rh
 sudo bash bootstrap.sh
 sudo bash extras.sh
 sudo bash install-docker.sh
-sudo bash install-btop-rhel.sh
+sudo bash install-rhel-extras.sh
 bash compose-update.sh -d /path/to/stack
 ```
