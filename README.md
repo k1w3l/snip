@@ -67,7 +67,7 @@ curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-rhel-extr
 curl -fsSL https://raw.githubusercontent.com/k1w3l/snip/master/install-rhel-extras.sh | sudo bash -s -- --all
 ```
 
-Ids: `htop`, `btop`, `yazi`, `ranger`, `mc`, `nnn`, `ncdu`, `fzf`, `lazygit`, `tig`, `micro`, `neovim`, `tmux`, `bat`, `ripgrep`, `jq`.
+Ids: `htop`, `btop`, `yazi`, `ranger`, `mc`, `nnn`, `ncdu`, `fzf`, `lazygit`, `tig`, `micro`, `neovim`, `fish`, `tmux`, `bat`, `ripgrep`, `jq`.
 
 | Id | Uso breve |
 |---|---|
@@ -83,6 +83,7 @@ Ids: `htop`, `btop`, `yazi`, `ranger`, `mc`, `nnn`, `ncdu`, `fzf`, `lazygit`, `t
 | tig | `tig` / `tig status` |
 | micro | `micro arquivo` — Ctrl-S / Ctrl-Q |
 | neovim | `nvim arquivo` — `:wq` |
+| fish | `fish` — → aceita sugestão; vira o shell padrão de quem rodou o `sudo` (root se rodado direto como root) |
 | tmux | `tmux` — Ctrl-b c / d |
 | bat | `bat arquivo` |
 | ripgrep | `rg padrão [path]` |

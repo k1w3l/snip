@@ -36,6 +36,7 @@ CATALOG=(
   "tig#Browser de histórico Git#Uso: tig; tig status — Enter detalha commit, q sai#dnf#tig#tig"
   "micro#Editor de texto intuitivo (estilo nano+)#Uso: micro arquivo — Ctrl-S salva, Ctrl-Q sai, Ctrl-E comando#dnf#micro#micro"
   "neovim#Editor Vim moderno#Uso: nvim arquivo — i insere, Esc, :wq salva e sai, :q! descarta#dnf#nvim#neovim"
+  "fish#Shell amigável (autosuggest, cores) — vira o shell padrão do usuário#Uso: fish — digite e → aceita sugestão; vale no próximo login#dnf#fish#fish"
   "tmux#Multiplexador de sessões no terminal#Uso: tmux; Ctrl-b c janela; Ctrl-b % split; Ctrl-b d detach; tmux a#dnf#tmux#tmux"
   "bat#cat com syntax highlight e pager#Uso: bat arquivo; bat -p arquivo (sem pager) — q sai do pager#dnf#bat#bat"
   "ripgrep#Busca rápida em arquivos (melhor que grep)#Uso: rg padrão [path]; rg -i erro /var/log#dnf#rg#ripgrep"
@@ -262,6 +263,56 @@ enable_copr() {
   fi
 }
 
+selection_has() {
+  local want="$1" idx
+  for idx in "${SELECTED_IDX[@]}"; do
+    if [[ "$(catalog_id "$idx")" == "$want" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+target_login_user() {
+  if [[ -n "${SUDO_USER:-}" && "${SUDO_USER}" != "root" ]]; then
+    echo "$SUDO_USER"
+  else
+    echo "root"
+  fi
+}
+
+set_fish_default_shell() {
+  local user fish_path current
+  user="$(target_login_user)"
+  fish_path="$(command -v fish || true)"
+
+  if [[ -z "$fish_path" ]]; then
+    echo "aviso: fish não encontrado; shell padrão não alterado" >&2
+    return 0
+  fi
+
+  if ! grep -qxF "$fish_path" /etc/shells 2>/dev/null; then
+    echo "$fish_path" >> /etc/shells
+  fi
+
+  current="$(getent passwd "$user" | cut -d: -f7)"
+  if [[ "$current" == "$fish_path" ]]; then
+    echo "==> fish já é o shell padrão de ${user}"
+    return 0
+  fi
+
+  # usermod (shadow-utils) está sempre presente; chsh exige util-linux-user no EL8/9.
+  echo "==> Definindo fish como shell padrão de ${user} (${current:-?} → ${fish_path})"
+  usermod -s "$fish_path" "$user"
+  echo "    vale no próximo login (ou rode: exec fish -l)"
+}
+
+post_install_hooks() {
+  if selection_has fish; then
+    set_fish_default_shell
+  fi
+}
+
 if [[ "$DO_LIST" -eq 1 ]]; then
   print_catalog
   exit 0
@@ -330,6 +381,7 @@ done
 
 if [[ ${#TO_INSTALL_IDX[@]} -eq 0 ]]; then
   echo "==> Nada a instalar."
+  post_install_hooks
   exit 0
 fi
 
@@ -391,4 +443,6 @@ for idx in "${TO_INSTALL_IDX[@]}"; do
     printf "  ✗ %s — binário %s não encontrado após install\n" "$id" "${bin_arr[0]}" >&2
   fi
 done
+
+post_install_hooks
 echo "==> Concluído."
